@@ -24,10 +24,40 @@ class Counter extends Component {
           age: "C",
         },
       ],
+      selectedColumn: null,
     };
   }
 
   render() {
+    const onEdit = (value) => {
+      this.setState({
+        selectedColumn: value,
+      });
+      console.log(value);
+    };
+
+    const onSave = () => {
+      this.setState({
+        data: this.state.data.map((value) => {
+          return value.id === this.state.selectedColumn.id
+            ? this.state.selectedColumn
+            : value;
+        }),
+        selectedColumn: null,
+      });
+    };
+
+    const onDelete = (value) => {
+      this.setState({
+        data: this.state.data.filter((item) => item.id !== value.id),
+      });
+    };
+
+    const onAdd = (event) => {
+      event.preventDefault();
+      console.log(event);
+    };
+
     return (
       <div className="flex items-center justify-center w-[100%] h-[100vh] flex-col">
         <table border={1}>
@@ -42,19 +72,123 @@ class Counter extends Component {
           <tbody>
             {this.state.data.map((value) => {
               return (
-                <tr>
-                  <td>{value.name}</td>
-                  <td>{value.surname}</td>
-                  <td>{value.age}</td>
+                <tr key={value.id}>
                   <td>
-                    <button>Edit</button>
-                    <button>Delete</button>
+                    {this.state.selectedColumn &&
+                    value.id === this.state.selectedColumn.id ? (
+                      <input
+                        type="text"
+                        defaultValue={this.state.selectedColumn.name}
+                        onChange={(e) => {
+                          this.setState({
+                            selectedColumn: {
+                              name: e.target.value,
+                              surname: this.state.selectedColumn.surname,
+                              age: this.state.selectedColumn.age,
+                              id: this.state.selectedColumn.id,
+                            },
+                          });
+                        }}
+                      />
+                    ) : (
+                      value.name
+                    )}
+                  </td>
+                  <td>
+                    {this.state.selectedColumn &&
+                    value.id === this.state.selectedColumn.id ? (
+                      <input
+                        type="text"
+                        defaultValue={this.state.selectedColumn.surname}
+                        onChange={(e) => {
+                          this.setState({
+                            selectedColumn: {
+                              name: this.state.selectedColumn.name,
+                              surname: e.target.value,
+                              age: this.state.selectedColumn.age,
+                              id: this.state.selectedColumn.id,
+                            },
+                          });
+                        }}
+                      />
+                    ) : (
+                      value.surname
+                    )}
+                  </td>
+                  <td>
+                    {this.state.selectedColumn &&
+                    value.id === this.state.selectedColumn.id ? (
+                      <input
+                        type="text"
+                        defaultValue={this.state.selectedColumn.age}
+                        onChange={(e) => {
+                          this.setState({
+                            selectedColumn: {
+                              name: this.state.selectedColumn.name,
+                              surname: this.state.selectedColumn.surname,
+                              age: e.target.value,
+                              id: this.state.selectedColumn.id,
+                            },
+                          });
+                        }}
+                      />
+                    ) : (
+                      value.age
+                    )}
+                  </td>
+
+                  <td>
+                    {this.state.selectedColumn &&
+                    value.id === this.state.selectedColumn.id ? (
+                      <button onClick={onSave}>Save</button>
+                    ) : (
+                      <button
+                        className="border-2 border-black"
+                        onClick={() => {
+                          onEdit(value);
+                        }}
+                      >
+                        Edit
+                      </button>
+                    )}
+                    <button
+                      className="border-2 border-black"
+                      onClick={() => {
+                        onDelete(value);
+                      }}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               );
             })}
           </tbody>
         </table>
+        <form className="mt-[100px]">
+          <input
+            className="border-2 border-black"
+            type="text"
+            placeholder="Name..."
+          />
+          <input
+            className="border-2 border-black"
+            type="text"
+            placeholder="Surname..."
+          />
+          <input
+            className="border-2 border-black"
+            type="text"
+            placeholder="Age..."
+          />
+          <button
+            className="border-2 border-black"
+            type="submit"
+            onClick={onAdd}
+          >
+            Submit
+          </button>
+        </form>
       </div>
     );
   }
