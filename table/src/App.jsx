@@ -55,7 +55,22 @@ class Counter extends Component {
 
     const onAdd = (event) => {
       event.preventDefault();
-      console.log(event);
+      const newData = {
+        name: event.target[0].value,
+        surname: event.target[1].value,
+        age: event.target[2].value,
+        id: this.state.data.length + 1,
+      };
+      this.setState(
+        {
+          data: [...this.state.data, newData],
+        },
+        () => {
+          event.target[0].value = "";
+          event.target[1].value = "";
+          event.target[2].value = "";
+        }
+      );
     };
 
     return (
@@ -165,7 +180,7 @@ class Counter extends Component {
             })}
           </tbody>
         </table>
-        <form className="mt-[100px]">
+        <form className="mt-[100px]" onSubmit={onAdd}>
           <input
             className="border-2 border-black"
             type="text"
@@ -181,11 +196,7 @@ class Counter extends Component {
             type="text"
             placeholder="Age..."
           />
-          <button
-            className="border-2 border-black"
-            type="submit"
-            onClick={onAdd}
-          >
+          <button className="border-2 border-black" type="submit">
             Submit
           </button>
         </form>
