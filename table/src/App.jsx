@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 class Counter extends Component {
   constructor() {
@@ -56,10 +57,10 @@ class Counter extends Component {
     const onAdd = (event) => {
       event.preventDefault();
       const newData = {
+        id: uuidv4(),
         name: event.target[0].value,
         surname: event.target[1].value,
         age: event.target[2].value,
-        id: this.state.data.length + 1,
       };
       this.setState(
         {
@@ -71,6 +72,7 @@ class Counter extends Component {
           event.target[2].value = "";
         }
       );
+      console.log(newData);
     };
 
     return (
@@ -182,16 +184,19 @@ class Counter extends Component {
         </table>
         <form className="mt-[100px]" onSubmit={onAdd}>
           <input
+            required
             className="border-2 border-black"
             type="text"
             placeholder="Name..."
           />
           <input
+            required
             className="border-2 border-black"
             type="text"
             placeholder="Surname..."
           />
           <input
+            required
             className="border-2 border-black"
             type="text"
             placeholder="Age..."
