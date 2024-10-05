@@ -1,4 +1,4 @@
-import { Button, Card, Form, Input, Modal } from "antd";
+import { Button, Card, Form, Input, InputNumber, Modal, Upload } from "antd";
 import { useEffect, useState } from "react";
 const { Meta } = Card;
 
@@ -19,8 +19,18 @@ const getCategory = () => {
     fetchData();
   }, []);
 
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     console.log(values);
+
+    const shouldUpload = {
+      title: values.title,
+      main_image: values.main_image,
+      price: values.price,
+    };
+
+    await fetch(
+      "http://localhost:8080/apiflower/category/house-plants?access_token=64bebc1e2c6d3f056a8c85b7"
+    );
   };
 
   return (
@@ -45,13 +55,32 @@ const getCategory = () => {
           >
             <Input />
           </Form.Item>
+          <Form.Item
+            label="Upload"
+            name="main_image"
+            rules={[{ required: true, message: "Please upload image" }]}
+          >
+            <Upload>
+              <Button>Upload</Button>
+            </Upload>
+          </Form.Item>
+          <Form.Item
+            label="Price"
+            name="price"
+            rules={[
+              {
+                required: true,
+                message: "Please input your price!",
+              },
+            ]}
+          >
+            <InputNumber />
+          </Form.Item>
           <Form.Item>
             <Button danger onClick={() => setOpenModal(false)}>
               Cancel
             </Button>
-            <Button htmlType="submit" onClick={() => setOpenModal(false)}>
-              Create
-            </Button>
+            <Button htmlType="submit">Create</Button>
           </Form.Item>
         </Form>
       </Modal>
